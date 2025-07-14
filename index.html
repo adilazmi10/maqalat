@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>مقالات</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>مقالات</h1>
+    <div class="controls">
+      <input type="text" id="search" placeholder="مضمون تلاش کریں...">
+      <select id="category-filter">
+        <option value="">تمام زمروں</option>
+        <option value="ادب">ادب</option>
+        <option value="فلسفہ">فلسفہ</option>
+        <option value="تاریخ">تاریخ</option>
+      </select>
+      <button id="toggle-theme">🌙</button>
+    </div>
+  </header>
+
+  <main id="article-list"></main>
+
+  <section id="contact">
+    <h2>رابطہ کریں</h2>
+    <form id="contact-form" action="https://formspree.io/f/your-id" method="POST">
+      <input type="text" name="name" placeholder="نام" required>
+      <input type="email" name="email" placeholder="ای میل" required>
+      <textarea name="message" placeholder="پیغام" required></textarea>
+      <button type="submit">بھیجیں</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 مقالات - تمام حقوق محفوظ ہیں</p>
+  </footer>
+</body>
+</html>
