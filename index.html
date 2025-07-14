@@ -3,35 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>مقالات</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script defer src="script.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>مقالات</h1>
-    <div class="controls">
-      <input type="text" id="search" placeholder="مضمون تلاش کریں...">
-      <select id="category-filter">
-        <option value="">تمام زمروں</option>
-        <option value="ادب">ادب</option>
-        <option value="فلسفہ">فلسفہ</option>
-        <option value="تاریخ">تاریخ</option>
-      </select>
-      <button id="toggle-theme">🌙</button>
+  <header class="hero">
+    <div class="overlay">
+      <h1>مقالات</h1>
+      <p>اردو ادب، فلسفہ، تاریخ پر مبنی نایاب مضامین</p>
     </div>
   </header>
 
-  <main id="article-list"></main>
+  <nav class="navbar">
+    <ul>
+      <li><a href="#">ہوم</a></li>
+      <li><a href="#">مضامین</a></li>
+      <li><a href="#">ادباء</a></li>
+      <li><a href="#">رابطہ</a></li>
+    </ul>
+  </nav>
 
-  <section id="contact">
-    <h2>رابطہ کریں</h2>
-    <form id="contact-form" action="https://formspree.io/f/your-id" method="POST">
-      <input type="text" name="name" placeholder="نام" required>
-      <input type="email" name="email" placeholder="ای میل" required>
-      <textarea name="message" placeholder="پیغام" required></textarea>
-      <button type="submit">بھیجیں</button>
-    </form>
+  <main class="container">
+    <aside class="sidebar">
+      <h3>زمریں</h3>
+      <ul id="category-list">
+        <li><button data-category="">تمام</button></li>
+        <li><button data-category="ادب">ادب</button></li>
+        <li><button data-category="فلسفہ">فلسفہ</button></li>
+        <li><button data-category="تاریخ">تاریخ</button></li>
+      </ul>
+    </aside>
+    <section class="articles" id="article-list"></section>
+  </main>
+
+  <section class="about">
+    <h2>ہمارے بارے میں</h2>
+    <p>مقالات ایک آزاد ادبی پلیٹ فارم ہے جہاں اردو کے موقر جرائد سے مضامین شائع کیے جاتے ہیں۔</p>
   </section>
 
   <footer>
