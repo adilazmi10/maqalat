@@ -1,54 +1,61 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مقالات</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background-color: #f9f6f1;
+      direction: rtl;
+    }
+    header {
+      background-color: #3e2723;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: #ffcc80;
+    }
+  </style>
 </head>
 <body>
-  <header class="hero">
-    <div class="overlay">
-      <h1>مقالات</h1>
-      <p>اردو ادب، فلسفہ، تاریخ پر مبنی نایاب مضامین</p>
-    </div>
+  <header>
+    <div class="logo">مقالات</div>
+    <nav>
+      <a href="#">صفحہ اول</a>
+      <a href="#">ادب</a>
+      <a href="#">فلسفہ</a>
+      <a href="#">تاریخ</a>
+      <a href="#">قرآنیات</a>
+      <a href="#">اخلاقيات</a>
+      <a href="#">سماجيات</a>
+      <a href="#">سياسيات</a>
+      <a href="#">مصنفین</a>
+      <a href="#">رابطہ</a>
+    </nav>
   </header>
-
-  <nav class="navbar">
-    <ul>
-      <li><a href="#">ہوم</a></li>
-      <li><a href="#">مضامین</a></li>
-      <li><a href="#">ادباء</a></li>
-      <li><a href="#">رابطہ</a></li>
-    </ul>
-  </nav>
-
-  <main class="container">
-    <aside class="sidebar">
-      <h3>زمره جات</h3>
-      <ul id="category-list">
-  <li><button data-category="">تمام</button></li>
-  <li><button data-category="ادب">ادب</button></li>
-  <li><button data-category="فلسفہ">فلسفہ</button></li>
-  <li><button data-category="تاریخ">تاریخ</button></li>
-  <li><button data-category="قرآنيات">قرآنيات</button></li>
-  <li><button data-category="اخلاقيات">اخلاقيات</button></li>
-  <li><button data-category="سماجيات">سماجيات</button></li>
-  <li><button data-category="سياسيات">سياسيات</button></li>
-</ul>
-    </aside>
-    <section class="articles" id="article-list"></section>
-  </main>
-
-  <section class="about">
-    <h2>ہمارے بارے میں</h2>
-    <p>مقالات ایک آزاد علمی وادبی پلیٹ فارم ہے جہاں اردو کے اعلی علمی وتحقیقی مقالات اور مضامین شائع کیے جاتے ہیں۔</p>
-  </section>
-
-  <footer>
-    <p>© 2025 مقالات - تمام حقوق محفوظ ہیں</p>
-  </footer>
 </body>
 </html>
