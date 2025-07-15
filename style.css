@@ -1,74 +1,26 @@
-body {
-  font-family: 'Noto Nastaliq Urdu', serif;
-  direction: rtl;
-  margin: 0;
-  background-color: #fff;
-  color: #222;
+.category-nav {
+  direction: rtl; /* aligns from right */
+  margin-top: 10px;
+  padding: 0 20px;
 }
-header.hero {
-  background: url('https://www.transparenttextures.com/patterns/paper-fibers.png') repeat, linear-gradient(to bottom, #f4f1ec, #eee);
-  text-align: center;
-  padding: 60px 20px;
-}
-header.hero h1 {
-  font-size: 3rem;
-}
-.navbar {
-  background: #442c2e;
-  padding: 10px;
-}
-.navbar ul {
+
+.category-list {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 15px;
   list-style: none;
   padding: 0;
+  margin: 0;
+  font-family: 'Noto Nastaliq Urdu', serif;
+  font-size: 18px;
 }
-.navbar li {
-  margin: 0 15px;
-}
-.navbar a {
-  color: white;
+
+.category-list li a {
   text-decoration: none;
-  font-weight: bold;
+  color: #444;
+  transition: color 0.3s;
 }
-.container {
-  display: flex;
-  margin: 20px;
-}
-.sidebar {
-  width: 20%;
-  padding: 10px;
-}
-.sidebar button {
-  background: none;
-  border: none;
-  color: #442c2e;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-.articles {
-  width: 80%;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 10px;
-}
-article {
-  border: 1px solid #ddd;
-  padding: 15px;
-  background: #f9f9f9;
-}
-article h2 {
-  font-size: 1.5rem;
-}
-.about {
-  background: #f2f2f2;
-  padding: 30px;
-  text-align: center;
-}
-footer {
-  background: #442c2e;
-  color: white;
-  text-align: center;
-  padding: 10px;
+
+.category-list li a:hover {
+  color: #a52a2a;
 }
