@@ -1,17 +1,58 @@
-<!-- Website Title -->
-<header style="text-align: center; font-family: 'Noto Nastaliq Urdu', serif; font-size: 36px; margin-top: 20px;">
-  مقالات
-</header>
-
-<!-- Category Navigation -->
-<nav class="category-nav">
-  <ul class="category-list">
-    <li><a href="#">ادب</a></li>
-    <li><a href="#">فلسفہ</a></li>
-    <li><a href="#">تاریخ</a></li>
-    <li><a href="#">قرآنیات</a></li>
-    <li><a href="#">اخلاقيات</a></li>
-    <li><a href="#">سماجيات</a></li>
-    <li><a href="#">سياسيات</a></li>
-  </ul>
-</nav>
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مقالات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background-color: #f9f6f1;
+      direction: rtl;
+    }
+    .site-title {
+      background-color: #3e2723;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 36px;
+      font-weight: bold;
+    }
+    nav {
+      background-color: #5d4037;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding: 10px 20px;
+      gap: 20px;
+      flex-direction: row-reverse;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: #ffcc80;
+    }
+  </style>
+</head>
+<body>
+  <div class="site-title">مقالات</div>
+  <nav>
+    <a href="#">صفحہ اول</a>
+    <a href="#">ادب</a>
+    <a href="#">فلسفہ</a>
+    <a href="#">تاریخ</a>
+    <a href="#">قرآنیات</a>
+    <a href="#">اخلاقيات</a>
+    <a href="#">سماجيات</a>
+    <a href="#">سياسيات</a>
+    <a href="#">مصنفین</a>
+    <a href="#">رابطہ</a>
+  </nav>
+</body>
+</html>
