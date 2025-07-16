@@ -27,7 +27,6 @@
       flex-wrap: wrap;
       padding: 10px 20px;
       gap: 20px;
-      flex-direction: row-reverse;
     }
     nav a {
       color: white;
@@ -38,10 +37,22 @@
     nav a:hover {
       color: #ffcc80;
     }
+    .content {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      font-size: 22px;
+      line-height: 2;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
   <div class="site-title">مقالات</div>
+
   <nav>
     <a href="#">صفحہ اول</a>
     <a href="#">ادب</a>
@@ -54,5 +65,9 @@
     <a href="#">مصنفین</a>
     <a href="#">رابطہ</a>
   </nav>
+
+  <div class="content">
+    <!-- Articles will appear here -->
+  </div>
 </body>
 </html>
