@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مصنفین - مقالات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background-color: #f9f6f1;
+      font-size: 17px;
+    }
+    .site-title {
+      background-color: #3e2723;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 30px;
+    }
+    nav {
+      background-color: #5d4037;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+    nav a:hover {
+      color: #ffcc80;
+    }
+    .authors-list {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+    .authors-list a {
+      display: block;
+      margin: 10px 0;
+      color: #3e2723;
+      text-decoration: none;
+    }
+    .authors-list a:hover {
+      color: #bf360c;
+    }
+  </style>
+</head>
+<body>
+  <div class="site-title">مصنفین</div>
+
+  <nav>
+    <a href="index.html">صفحہ اول</a>
+    <a href="authors.html">مصنفین</a>
+  </nav>
+
+  <div class="authors-list" id="authors"></div>
+
+  <script>
+    fetch('articles.json')
+      .then(res => res.json())
+      .then(data => {
+        const authors = [...new Set(data.map(article => article.author))];
+        const container = document.getElementById('authors');
+        authors.forEach(author => {
+          const link = document.createElement('a');
+          link.href = `author.html?name=${encodeURIComponent(author)}`;
+          link.textContent = author;
+          container.appendChild(link);
+        });
+      });
+  </script>
+</body>
+</html>
