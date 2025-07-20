@@ -4,11 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مقالات</title>
-
-  <!-- Correct Font Link -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
-
-  <!-- Correct Style Block -->
   <style>
     body {
       margin: 0;
@@ -16,6 +12,7 @@
       background-color: #f9f6f1;
       direction: rtl;
     }
+
     .site-title {
       background-color: #3e2723;
       color: white;
@@ -24,6 +21,7 @@
       font-size: 36px;
       font-weight: bold;
     }
+
     nav {
       background-color: #5d4037;
       display: flex;
@@ -32,25 +30,51 @@
       padding: 10px 20px;
       gap: 20px;
     }
+
     nav a {
       color: white;
       text-decoration: none;
       font-size: 20px;
       transition: color 0.3s ease;
     }
+
     nav a:hover {
       color: #ffcc80;
     }
+
     .content {
       max-width: 800px;
       margin: 40px auto;
       padding: 20px;
-      background-color: #fff;
+    }
+
+    .article-card {
+      background: #fff;
+      padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      font-family: 'Noto Nastaliq Urdu', serif;
+      margin-bottom: 20px;
       font-size: 22px;
       line-height: 2;
       text-align: right;
+    }
+
+    .author-link {
+      color: #3e2723;
+      text-decoration: underline;
+    }
+
+    .read-more {
+      display: inline-block;
+      margin-top: 10px;
+      color: blue;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .read-more:hover {
+      color: darkblue;
     }
   </style>
 </head>
@@ -71,10 +95,12 @@
   </nav>
 
   <div class="content">
-    <!-- Articles will appear here -->
+    <div class="article-card">
+      <h2>تعصب</h2>
+      <p><strong>مصنف:</strong> <a href="author.html?name=سر سید احمد خان" class="author-link">سر سید احمد خان</a></p>
+      <p><strong>حوالہ:</strong> تعصب ایک ایسی بد خصلت ہے جو انسان کی تمام نیکیوں کو ضائع کر دیتی ہے اور اس کی عقل، فہم، اور ترقی کی راہ میں سب سے بڑی رکاوٹ بن جاتی ہے۔</p>
+      <a href="article3.html" class="read-more">مکمل مضمون پڑھیں</a>
+    </div>
   </div>
-
-  <!-- ✅ Move script tag here -->
-  <script src="script.js"></script>
 </body>
 </html>
