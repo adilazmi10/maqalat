@@ -1,10 +1,10 @@
 [
   {
-    "id": 1,
-    "title": "اخلاق اور انسانیت",
+    "id": "article3",
+    "title": "تعصب",
+    "reference": "تہذیب الاخلاق، جلد۱،شمارہ۱",
     "author": "سر سید احمد خان",
-    "excerpt": "انسانی فلاح اور اخلاقی اقدار پر مبنی ایک تجزیاتی مضمون",
-    "content": "article3.html",
-    "category": "اخلاقيات"
+    "category": "اخلاقيات",
+    "file": "article3.html"
   }
 ]
