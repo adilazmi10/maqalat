@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>زمرہ - مقالات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background-color: #f9f6f1;
+      font-size: 17px;
+    }
+    .site-title {
+      background-color: #3e2723;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 30px;
+    }
+    nav {
+      background-color: #5d4037;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+    nav a:hover {
+      color: #ffcc80;
+    }
+    .article-card {
+      background-color: white;
+      margin: 20px auto;
+      max-width: 700px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .article-card h3 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+    .article-card a {
+      text-decoration: none;
+      color: #3e2723;
+    }
+  </style>
+</head>
+<body>
+  <div class="site-title">زمرہ</div>
+
+  <nav>
+    <a href="index.html">صفحہ اول</a>
+    <a href="authors.html">مصنفین</a>
+  </nav>
+
+  <div id="category-articles"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get('category');
+
+    fetch('articles.json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('category-articles');
+        const filtered = data.filter(article => article.category === category);
+        filtered.forEach(article => {
+          const card = document.createElement('div');
+          card.className = 'article-card';
+          card.innerHTML = `
+            <h3><a href="${article.content}">${article.title}</a></h3>
+            <p><strong>مصنف:</strong> <a href="author.html?name=${encodeURIComponent(article.author)}">${article.author}</a></p>
+            <p><strong>حوالہ:</strong> ${article.excerpt}</p>
+          `;
+          container.appendChild(card);
+        });
+      });
+  </script>
+</body>
+</html>
