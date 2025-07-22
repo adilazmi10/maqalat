@@ -1,10 +1,13 @@
-// 1. Supabase credentials — replace with your own
-const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';         // 🔁 Replace this
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';                     // 🔁 Replace this
+// 1. Import Supabase client
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+// 2. Supabase credentials
+const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'; 
 
-// 2. Function to load articles
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// 3. Function to load articles
 async function loadArticles() {
   const { data: articles, error } = await supabase
     .from('articles')
@@ -34,5 +37,5 @@ async function loadArticles() {
   });
 }
 
-// 3. Load on page start
+// 4. Load on page start
 document.addEventListener('DOMContentLoaded', loadArticles);
