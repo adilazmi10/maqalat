@@ -67,7 +67,7 @@
         .eq('id', categoryId)
         .single();
 
-      if (catErr) {
+      if (catErr || !categoryData) {
         document.getElementById('category-name').textContent = 'زمرہ نہیں ملا';
         return;
       }
@@ -89,7 +89,7 @@
       const container = document.getElementById('articles');
       container.innerHTML = '';
 
-      if (articles.length === 0) {
+      if (!articles || articles.length === 0) {
         container.innerHTML = '<p>اس زمرے میں کوئی مضمون موجود نہیں۔</p>';
         return;
       }
