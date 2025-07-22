@@ -7,7 +7,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// 3. Function to load articles with joined author
+// 3. Function to load articles with joined author & category
 async function loadArticles() {
   const { data: articles, error } = await supabase
     .from('articles')
@@ -15,11 +15,8 @@ async function loadArticles() {
       id,
       title,
       reference,
-      category,
-      authors (
-        id,
-        name
-      )
+      author:authors ( id, name ),
+      category:categories ( id, name )
     `)
     .order('id', { ascending: false });
 
@@ -32,8 +29,10 @@ async function loadArticles() {
   container.innerHTML = '';
 
   articles.forEach(article => {
-    const authorName = article.authors?.name || 'نامعلوم';
-    const authorId = article.authors?.id;
+    const authorName = article.author?.name || 'نامعلوم';
+    const authorId = article.author?.id;
+    const categoryName = article.category?.name || 'غیر معروف';
+    const categoryId = article.category?.id;
 
     const card = document.createElement('div');
     card.className = 'article-card';
@@ -42,7 +41,7 @@ async function loadArticles() {
       <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
       <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
       <p>مصنف: <a href="author.html?id=${authorId}">${authorName}</a></p>
-      <p>زمرہ: <a href="category.html?name=${encodeURIComponent(article.category)}">${article.category}</a></p>
+      <p>زمرہ: <a href="category.html?id=${categoryId}">${categoryName}</a></p>
     `;
 
     container.appendChild(card);
