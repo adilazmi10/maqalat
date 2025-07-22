@@ -63,19 +63,34 @@
 
   <div class="authors-list" id="authors"></div>
 
-  <script>
-    fetch('articles.json')
-      .then(res => res.json())
-      .then(data => {
-        const authors = [...new Set(data.map(article => article.author))];
-        const container = document.getElementById('authors');
-        authors.forEach(author => {
-          const link = document.createElement('a');
-          link.href = `author.html?name=${encodeURIComponent(author)}`;
-          link.textContent = author;
-          container.appendChild(link);
-        });
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+    const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadAuthors() {
+      const { data: authors, error } = await supabase
+        .from('authors')
+        .select('id, name')
+        .order('name', { ascending: true });
+
+      const container = document.getElementById('authors');
+      if (error || !authors) {
+        container.innerHTML = '<p>مصنفین کو لوڈ کرنے میں مسئلہ ہوا۔</p>';
+        return;
+      }
+
+      authors.forEach(author => {
+        const link = document.createElement('a');
+        link.href = `author.html?id=${author.id}`;
+        link.textContent = author.name;
+        container.appendChild(link);
       });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAuthors);
   </script>
 </body>
 </html>
