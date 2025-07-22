@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>زمرہ جات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background-color: #f9f8f4;
+      direction: rtl;
+    }
+    .site-title {
+      background-color: #00695c;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .content {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    .category-card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 22px;
+    }
+    .category-card a {
+      text-decoration: none;
+      color: #00695c;
+    }
+    .category-card a:hover {
+      color: #004d40;
+    }
+  </style>
+</head>
+<body>
+  <div class="site-title">زمرہ جات</div>
+  <div class="content" id="categories"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadCategories() {
+      const { data: categories, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error || !categories) {
+        console.error('Failed to load categories:', error);
+        document.getElementById('categories').innerHTML = '<p>زمرہ جات لوڈ نہیں ہو سکے۔</p>';
+        return;
+      }
+
+      const container = document.getElementById('categories');
+      categories.forEach(category => {
+        const div = document.createElement('div');
+        div.className = 'category-card';
+
+        // Use special page for "مصنفین"
+        const linkPage = category.name === 'مصنفین' ? 'category-authors.html' : 'category.html';
+
+        div.innerHTML = `<a href="${linkPage}?id=${category.id}">${category.name}</a>`;
+        container.appendChild(div);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCategories);
+  </script>
+</body>
+</html>
