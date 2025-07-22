@@ -60,7 +60,7 @@
     async function loadAuthorArticles() {
       if (!authorId) return;
 
-      // Step 1: Get author name from `authors` table
+      // Step 1: Get author name
       const { data: authorData, error: authorError } = await supabase
         .from('authors')
         .select('name')
