@@ -3,86 +3,110 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>زمرہ - مقالات</title>
+  <title>زمرہ کے مضامین</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Noto Nastaliq Urdu', serif;
-      background-color: #f9f6f1;
-      font-size: 17px;
+      background-color: #fdfcf8;
+      direction: rtl;
     }
     .site-title {
-      background-color: #3e2723;
+      background-color: #004d40;
       color: white;
       text-align: center;
-      padding: 15px 0;
+      padding: 20px 0;
       font-size: 30px;
+      font-weight: bold;
     }
-    nav {
-      background-color: #5d4037;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 10px;
-    }
-    nav a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
-      font-size: 17px;
-    }
-    nav a:hover {
-      color: #ffcc80;
+    .content {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
     }
     .article-card {
-      background-color: white;
-      margin: 20px auto;
-      max-width: 700px;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    .article-card h3 {
-      margin-top: 0;
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       font-size: 20px;
+      line-height: 2;
     }
     .article-card a {
+      color: #004d40;
       text-decoration: none;
-      color: #3e2723;
+    }
+    .article-card a:hover {
+      color: #00796b;
     }
   </style>
 </head>
 <body>
-  <div class="site-title">زمرہ</div>
+  <div class="site-title" id="category-name">زمرہ</div>
+  <div class="content" id="articles"></div>
 
-  <nav>
-    <a href="index.html">صفحہ اول</a>
-    <a href="authors.html">مصنفین</a>
-  </nav>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-  <div id="category-articles"></div>
+    const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const category = params.get('category');
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get('id');
 
-    fetch('articles.json')
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById('category-articles');
-        const filtered = data.filter(article => article.category === category);
-        filtered.forEach(article => {
-          const card = document.createElement('div');
-          card.className = 'article-card';
-          card.innerHTML = `
-            <h3><a href="${article.content}">${article.title}</a></h3>
-            <p><strong>مصنف:</strong> <a href="author.html?name=${encodeURIComponent(article.author)}">${article.author}</a></p>
-            <p><strong>حوالہ:</strong> ${article.excerpt}</p>
-          `;
-          container.appendChild(card);
-        });
+    async function loadCategoryArticles() {
+      if (!categoryId) return;
+
+      // 1. Get category name from `categories` table
+      const { data: categoryData, error: catErr } = await supabase
+        .from('categories')
+        .select('name')
+        .eq('id', categoryId)
+        .single();
+
+      if (catErr) {
+        document.getElementById('category-name').textContent = 'زمرہ نہیں ملا';
+        return;
+      }
+
+      document.getElementById('category-name').textContent = `زمرہ: ${categoryData.name}`;
+
+      // 2. Get articles in this category
+      const { data: articles, error: articleErr } = await supabase
+        .from('articles')
+        .select('*, authors(name)')
+        .eq('category_id', categoryId)
+        .order('id', { ascending: false });
+
+      if (articleErr) {
+        console.error('Error loading articles:', articleErr);
+        return;
+      }
+
+      const container = document.getElementById('articles');
+      container.innerHTML = '';
+
+      if (articles.length === 0) {
+        container.innerHTML = '<p>اس زمرے میں کوئی مضمون موجود نہیں۔</p>';
+        return;
+      }
+
+      articles.forEach(article => {
+        const div = document.createElement('div');
+        div.className = 'article-card';
+        div.innerHTML = `
+          <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
+          <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
+          <p>مصنف: <a href="author.html?id=${article.author_id}">${article.authors?.name || 'نامعلوم'}</a></p>
+        `;
+        container.appendChild(div);
       });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCategoryArticles);
   </script>
 </body>
 </html>
