@@ -39,7 +39,7 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // truncate for safety
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // use your real key here
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -50,12 +50,13 @@
 
       const { data: article, error } = await supabase
         .from('articles')
-        .select('*, authors(name)')
+        .select('id, title, reference, content, author_id, authors(name)')
         .eq('id', articleId)
         .single();
 
       if (error || !article) {
         document.getElementById('content').textContent = 'مضمون نہیں ملا۔';
+        console.error('Error:', error);
         return;
       }
 
@@ -63,7 +64,7 @@
       document.getElementById('reference').textContent = article.reference || '';
       document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
       document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
-      document.getElementById('content').textContent = article.content || 'کوئی مواد موجود نہیں';
+      document.getElementById('content').innerHTML = article.content || 'کوئی مواد موجود نہیں';
     }
 
     loadArticle();
