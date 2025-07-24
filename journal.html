@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مجلہ کے دیگر مضامین</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Nastaliq Urdu', serif;
+      background-color: #fdfcf8;
+      margin: 0;
+      padding: 20px;
+    }
+    .site-title {
+      background-color: #004d40;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .article-card {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 800px;
+      font-size: 20px;
+      line-height: 2;
+    }
+    a {
+      color: #004d40;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #00796b;
+    }
+  </style>
+</head>
+<body>
+  <div class="site-title" id="journal-name">مجلہ</div>
+  <div id="articles"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const journalId = urlParams.get('id');
+
+    async function loadJournalArticles() {
+      if (!journalId) return;
+
+      // 1. Fetch journal name
+      const { data: journal, error: journalErr } = await supabase
+        .from('journals')
+        .select('name')
+        .eq('id', journalId)
+        .single();
+
+      if (journalErr || !journal) {
+        document.getElementById('journal-name').textContent = 'مجلہ نہیں ملا';
+        return;
+      }
+
+      document.getElementById('journal-name').textContent = `مجلہ: ${journal.name}`;
+
+      // 2. Fetch articles linked to this journal
+      const { data: articles, error: articleErr } = await supabase
+        .from('articles')
+        .select('id, title, reference, author_id, authors(name)')
+        .eq('journal_id', journalId)
+        .order('id', { ascending: false });
+
+      const container = document.getElementById('articles');
+      container.innerHTML = '';
+
+      if (articleErr || !articles || articles.length === 0) {
+        container.innerHTML = '<p>کوئی مضمون موجود نہیں۔</p>';
+        return;
+      }
+
+      articles.forEach(article => {
+        const div = document.createElement('div');
+        div.className = 'article-card';
+        div.innerHTML = `
+          <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
+          <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
+          <p>مصنف: <a href="author.html?id=${article.author_id}">${article.authors?.name || 'نامعلوم'}</a></p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadJournalArticles);
+  </script>
+</body>
+</html>
