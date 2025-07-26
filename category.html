@@ -11,7 +11,6 @@
       font-family: 'Noto Nastaliq Urdu', serif;
       background-color: #fdfcf8;
       direction: rtl;
-      font-size: 18px;
     }
     .site-title {
       background-color: #004d40;
@@ -56,36 +55,24 @@
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const urlParams = new URLSearchParams(window.location.search);
-    const categoryId = urlParams.get('id');
+    const categoryName = urlParams.get('name');
 
-    async function loadCategoryArticles() {
-      if (!categoryId) return;
+    async function loadContent() {
+      if (!categoryName) return;
 
-      // 1. Get category name from Supabase
-      const { data: categoryData, error: catErr } = await supabase
-        .from('categories')
-        .select('name')
-        .eq('id', categoryId)
-        .single();
-
-      if (catErr || !categoryData) {
-        document.getElementById('category-name').textContent = 'زمرہ نہیں ملا';
-        return;
-      }
-
-      const categoryName = categoryData.name;
       document.getElementById('category-name').textContent = `زمرہ: ${categoryName}`;
+
       const container = document.getElementById('articles');
       container.innerHTML = '';
 
+      // Show authors if category is "مصنفین"
       if (categoryName === 'مصنفین') {
-        // If it's the authors category, show author names only
-        const { data: authors, error: authorsErr } = await supabase
+        const { data: authors, error } = await supabase
           .from('authors')
           .select('id, name')
           .order('name', { ascending: true });
 
-        if (authorsErr || !authors.length) {
+        if (error || !authors || authors.length === 0) {
           container.innerHTML = '<p>کوئی مصنف موجود نہیں۔</p>';
           return;
         }
@@ -93,37 +80,52 @@
         authors.forEach(author => {
           const div = document.createElement('div');
           div.className = 'article-card';
-          div.innerHTML = `<p><a href="author.html?id=${author.id}">${author.name}</a></p>`;
-          container.appendChild(div);
-        });
-
-      } else {
-        // Otherwise, show articles from the category
-        const { data: articles, error: articleErr } = await supabase
-          .from('articles')
-          .select('*, authors(name)')
-          .eq('category_id', categoryId)
-          .order('id', { ascending: false });
-
-        if (articleErr || !articles.length) {
-          container.innerHTML = '<p>اس زمرے میں کوئی مضمون موجود نہیں۔</p>';
-          return;
-        }
-
-        articles.forEach(article => {
-          const div = document.createElement('div');
-          div.className = 'article-card';
           div.innerHTML = `
-            <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
-            <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
-            <p>مصنف: <a href="author.html?id=${article.author_id}">${article.authors?.name || 'نامعلوم'}</a></p>
+            <h3><a href="author.html?id=${author.id}">${author.name}</a></h3>
           `;
           container.appendChild(div);
         });
+        return;
       }
+
+      // Fetch category ID from name
+      const { data: category, error: catErr } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('name', categoryName)
+        .single();
+
+      if (catErr || !category) {
+        container.innerHTML = '<p>زمرہ نہیں ملا۔</p>';
+        return;
+      }
+
+      const categoryId = category.id;
+
+      const { data: articles, error: articleErr } = await supabase
+        .from('articles')
+        .select('id, title, reference, author_id, authors(name)')
+        .eq('category_id', categoryId)
+        .order('id', { ascending: false });
+
+      if (articleErr || !articles || articles.length === 0) {
+        container.innerHTML = '<p>اس زمرے میں کوئی مضمون موجود نہیں۔</p>';
+        return;
+      }
+
+      articles.forEach(article => {
+        const div = document.createElement('div');
+        div.className = 'article-card';
+        div.innerHTML = `
+          <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
+          <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
+          <p>مصنف: <a href="author.html?id=${article.author_id}">${article.authors?.name || 'نامعلوم'}</a></p>
+        `;
+        container.appendChild(div);
+      });
     }
 
-    document.addEventListener('DOMContentLoaded', loadCategoryArticles);
+    document.addEventListener('DOMContentLoaded', loadContent);
   </script>
 </body>
 </html>
