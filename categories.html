@@ -12,6 +12,20 @@
       background-color: #f9f8f4;
       direction: rtl;
     }
+    nav.navbar {
+      background-color: #00695c;
+      text-align: center;
+      padding: 10px;
+    }
+    nav.navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
     .site-title {
       background-color: #00695c;
       color: white;
@@ -20,45 +34,72 @@
       font-size: 30px;
       font-weight: bold;
     }
+    .section-title {
+      text-align: center;
+      font-size: 24px;
+      margin-top: 40px;
+      color: #333;
+    }
     .content {
       max-width: 800px;
-      margin: 40px auto;
+      margin: 20px auto;
       padding: 20px;
     }
-    .category-card {
+    .category-card, .journal-card {
       background: white;
       padding: 20px;
       margin-bottom: 15px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
-      font-size: 22px;
+      font-size: 20px;
     }
-    .category-card a {
+    .category-card a, .journal-card a {
       text-decoration: none;
       color: #00695c;
     }
-    .category-card a:hover {
+    .category-card a:hover, .journal-card a:hover {
       color: #004d40;
+    }
+    .count {
+      font-size: 16px;
+      color: #888;
     }
   </style>
 </head>
 <body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <a href="index.html">صفحہ اول</a>
+    <a href="category.html?name=مصنفین">مصنفین</a>
+    <a href="categories.html">زمرہ جات</a>
+  </nav>
+
   <div class="site-title">زمرہ جات</div>
-  <div class="content" id="categories"></div>
+  <div class="content">
+    <div id="categories-section">
+      <div class="section-title">تمام زمرہ جات</div>
+      <div id="categories"></div>
+    </div>
+
+    <div id="journals-section">
+      <div class="section-title">جرائد</div>
+      <div id="journals"></div>
+    </div>
+  </div>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // your real anon key
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     async function loadCategories() {
       const { data: categories, error } = await supabase
         .from('categories')
-        .select('*')
-        .order('id', { ascending: true });
+        .select('id, name');
 
       if (error || !categories) {
         console.error('Failed to load categories:', error);
@@ -67,19 +108,53 @@
       }
 
       const container = document.getElementById('categories');
-      categories.forEach(category => {
+      container.innerHTML = '';
+
+      for (const category of categories) {
+        // Count articles under this category
+        const { count, error: countError } = await supabase
+          .from('articles')
+          .select('id', { count: 'exact', head: true })
+          .eq('category_id', category.id);
+
         const div = document.createElement('div');
         div.className = 'category-card';
 
-        // Use special page for "مصنفین"
         const linkPage = category.name === 'مصنفین' ? 'category-authors.html' : 'category.html';
+        div.innerHTML = `
+          <a href="${linkPage}?name=${encodeURIComponent(category.name)}">${category.name}</a>
+          <div class="count">${count || 0} مضامین</div>
+        `;
+        container.appendChild(div);
+      }
+    }
 
-        div.innerHTML = `<a href="${linkPage}?id=${category.id}">${category.name}</a>`;
+    async function loadJournals() {
+      const { data: journals, error } = await supabase
+        .from('journals')
+        .select('id, name');
+
+      if (error || !journals) {
+        console.error('Failed to load journals:', error);
+        document.getElementById('journals').innerHTML = '<p>مجلات لوڈ نہیں ہو سکے۔</p>';
+        return;
+      }
+
+      const container = document.getElementById('journals');
+      container.innerHTML = '';
+
+      journals.forEach(journal => {
+        const div = document.createElement('div');
+        div.className = 'journal-card';
+        div.innerHTML = `<a href="journal.html?id=${journal.id}">${journal.name}</a>`;
         container.appendChild(div);
       });
     }
 
-    document.addEventListener('DOMContentLoaded', loadCategories);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCategories();
+      loadJournals();
+    });
   </script>
 </body>
 </html>
