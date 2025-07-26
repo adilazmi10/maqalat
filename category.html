@@ -7,15 +7,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
   <style>
     body {
-      <nav class="navbar">
-  <a href="index.html">صفحہ اول</a>
-  <a href="category.html?name=مصنفین">مصنفین</a>
-  <a href="categories.html">زمروں</a>
-  </nav>
       margin: 0;
       font-family: 'Noto Nastaliq Urdu', serif;
       background-color: #fdfcf8;
       direction: rtl;
+    }
+    nav.navbar {
+      background-color: #004d40;
+      text-align: center;
+      padding: 10px;
+    }
+    nav.navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 18px;
+    }
+    nav.navbar a:hover {
+      text-decoration: underline;
     }
     .site-title {
       background-color: #004d40;
@@ -49,9 +58,19 @@
   </style>
 </head>
 <body>
+
+  <!-- ✅ Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html">صفحہ اول</a>
+    <a href="category.html?name=مصنفین">مصنفین</a>
+    <a href="categories.html">زمروں</a>
+  </nav>
+
+  <!-- ✅ Page Title -->
   <div class="site-title" id="category-name">زمرہ</div>
   <div class="content" id="articles"></div>
 
+  <!-- ✅ Supabase Script -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -66,11 +85,10 @@
       if (!categoryName) return;
 
       document.getElementById('category-name').textContent = `زمرہ: ${categoryName}`;
-
       const container = document.getElementById('articles');
       container.innerHTML = '';
 
-      // Show authors if category is "مصنفین"
+      // Show Authors if category is "مصنفین"
       if (categoryName === 'مصنفین') {
         const { data: authors, error } = await supabase
           .from('authors')
@@ -85,15 +103,13 @@
         authors.forEach(author => {
           const div = document.createElement('div');
           div.className = 'article-card';
-          div.innerHTML = `
-            <h3><a href="author.html?id=${author.id}">${author.name}</a></h3>
-          `;
+          div.innerHTML = `<h3><a href="author.html?id=${author.id}">${author.name}</a></h3>`;
           container.appendChild(div);
         });
         return;
       }
 
-      // Fetch category ID from name
+      // Get category ID from name
       const { data: category, error: catErr } = await supabase
         .from('categories')
         .select('id')
@@ -107,6 +123,7 @@
 
       const categoryId = category.id;
 
+      // Fetch Articles in this category
       const { data: articles, error: articleErr } = await supabase
         .from('articles')
         .select('id, title, reference, author_id, authors(name)')
