@@ -58,54 +58,70 @@
     const categoryName = urlParams.get('name');
 
     async function loadCategoryArticles() {
-      if (!categoryName) return;
+  if (!categoryId) return;
 
-      // Step 1: Get category id from categories table using name
-      const { data: category, error: catErr } = await supabase
-        .from('categories')
-        .select('id, name')
-        .eq('name', categoryName)
-        .single();
+  const { data: categoryData, error: catErr } = await supabase
+    .from('categories')
+    .select('name')
+    .eq('id', categoryId)
+    .single();
 
-      if (catErr || !category) {
-        document.getElementById('category-name').textContent = 'زمرہ نہیں ملا';
-        return;
-      }
+  if (catErr || !categoryData) {
+    document.getElementById('category-name').textContent = 'زمرہ نہیں ملا';
+    return;
+  }
 
-      document.getElementById('category-name').textContent = `زمرہ: ${category.name}`;
+  const categoryName = categoryData.name;
+  document.getElementById('category-name').textContent = `زمرہ: ${categoryName}`;
+  const container = document.getElementById('articles');
+  container.innerHTML = '';
 
-      // Step 2: Get articles in this category
-      const { data: articles, error: articleErr } = await supabase
-        .from('articles')
-        .select('*, authors(name)')
-        .eq('category_id', category.id)
-        .order('id', { ascending: false });
+  if (categoryName === 'مصنفین') {
+    // Show authors instead of articles
+    const { data: authors, error: authorsError } = await supabase
+      .from('authors')
+      .select('id, name')
+      .order('name', { ascending: true });
 
-      if (articleErr) {
-        console.error('Error loading articles:', articleErr);
-        return;
-      }
-
-      const container = document.getElementById('articles');
-      container.innerHTML = '';
-
-      if (!articles || articles.length === 0) {
-        container.innerHTML = '<p>اس زمرے میں کوئی مضمون موجود نہیں۔</p>';
-        return;
-      }
-
-      articles.forEach(article => {
-        const div = document.createElement('div');
-        div.className = 'article-card';
-        div.innerHTML = `
-          <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
-          <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
-          <p>مصنف: <a href="author.html?id=${article.author_id}">${article.authors?.name || 'نامعلوم'}</a></p>
-        `;
-        container.appendChild(div);
-      });
+    if (authorsError || !authors.length) {
+      container.innerHTML = '<p>کوئی مصنف موجود نہیں۔</p>';
+      return;
     }
 
+    authors.forEach(author => {
+      const div = document.createElement('div');
+      div.className = 'article-card';
+      div.innerHTML = `
+        <p><a href="author.html?id=${author.id}">${author.name}</a></p>
+      `;
+      container.appendChild(div);
+    });
+
+  } else {
+    // Regular articles for other categories
+    const { data: articles, error: articleErr } = await supabase
+      .from('articles')
+      .select('*, authors(name)')
+      .eq('category_id', categoryId)
+      .order('id', { ascending: false });
+
+    if (articleErr || !articles.length) {
+      container.innerHTML = '<p>اس زمرے میں کوئی مضمون موجود نہیں۔</p>';
+      return;
+    }
+
+    articles.forEach(article => {
+      const div = document.createElement('div');
+      div.className = 'article-card';
+      div.innerHTML = `
+        <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
+        <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
+        <p>مصنف: <a href="author.html?id=${article.author_id}">${article.authors?.name || 'نامعلوم'}</a></p>
+      `;
+      container.appendChild(div);
+    });
+  }
+}
     document.addEventListener('DOMContentLoaded', loadCategoryArticles);
   </script>
 </body>
