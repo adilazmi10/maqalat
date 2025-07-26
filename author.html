@@ -124,7 +124,7 @@
         div.innerHTML = `
           <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
           <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
-          <p>زمرہ: <a href="category.html?id=${article.category_id}">${article.categories?.name || ''}</a></p>
+          <p>زمرہ: <a href="category.html?name=${encodeURIComponent(article.categories?.name || '')}">${article.categories?.name || ''}</a></p>
         `;
         container.appendChild(div);
       });
