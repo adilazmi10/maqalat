@@ -12,8 +12,22 @@
       background-color: #f9f6f1;
       direction: rtl;
     }
-    .site-title {
+    nav.navbar {
       background-color: #3e2723;
+      text-align: center;
+      padding: 10px;
+    }
+    nav.navbar a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+    .site-title {
+      background-color: #5d4037;
       color: white;
       text-align: center;
       padding: 20px 0;
@@ -44,9 +58,19 @@
   </style>
 </head>
 <body>
+
+  <!-- ✅ Navigation -->
+  <nav class="navbar">
+    <a href="index.html">صفحہ اول</a>
+    <a href="categories.html">زمرہ جات</a>
+    <a href="category.html?name=مصنفین">مصنفین</a>
+  </nav>
+
+  <!-- ✅ Author Name Title -->
   <div class="site-title" id="author-name">مصنف</div>
   <div class="content" id="articles"></div>
 
+  <!-- ✅ Script to Load Articles -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -60,24 +84,24 @@
     async function loadAuthorArticles() {
       if (!authorId) return;
 
-      // Step 1: Get author name
+      // Get author name
       const { data: authorData, error: authorError } = await supabase
         .from('authors')
         .select('name')
         .eq('id', authorId)
         .single();
 
-      if (authorError) {
+      if (authorError || !authorData) {
         document.getElementById('author-name').textContent = 'مصنف نہیں ملا';
         return;
       }
 
       document.getElementById('author-name').textContent = `مضامین از ${authorData.name}`;
 
-      // Step 2: Get all articles by this author
+      // Get all articles by this author with category name
       const { data: articles, error: articleError } = await supabase
         .from('articles')
-        .select('*')
+        .select('id, title, reference, category_id, categories(name)')
         .eq('author_id', authorId)
         .order('id', { ascending: false });
 
@@ -89,7 +113,7 @@
       const container = document.getElementById('articles');
       container.innerHTML = '';
 
-      if (articles.length === 0) {
+      if (!articles || articles.length === 0) {
         container.innerHTML = '<p>کوئی مضمون موجود نہیں۔</p>';
         return;
       }
@@ -100,7 +124,7 @@
         div.innerHTML = `
           <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
           <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
-          <p>زمرہ: <a href="category.html?id=${article.category_id}">${article.category}</a></p>
+          <p>زمرہ: <a href="category.html?id=${article.category_id}">${article.categories?.name || ''}</a></p>
         `;
         container.appendChild(div);
       });
