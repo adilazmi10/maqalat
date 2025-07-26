@@ -7,24 +7,39 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
   <style>
     body {
-      <nav class="navbar">
-      <a href="index.html">صفحہ اول</a>
-      <a href="category.html?name=مصنفین">مصنفین</a>
-      <a href="categories.html">زمرہ جات</a>
-</nav>
       font-family: 'Noto Nastaliq Urdu', serif;
       background-color: #fdfcf8;
       padding: 20px;
       direction: rtl;
     }
+
+    nav.navbar {
+      background-color: #004d40;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav.navbar a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    nav.navbar a:hover {
+      text-decoration: underline;
+    }
+
     h1 {
       font-size: 30px;
       color: #004d40;
     }
+
     p {
       font-size: 16px;
       line-height: 2;
     }
+
     .meta {
       margin-top: 10px;
       color: #666;
@@ -32,12 +47,22 @@
   </style>
 </head>
 <body>
+  <!-- ✅ Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html">صفحہ اول</a>
+    <a href="category.html?name=مصنفین">مصنفین</a>
+    <a href="categories.html">زمرہ جات</a>
+  </nav>
+
+  <!-- ✅ Article Title and Metadata -->
   <h1 id="title">مضمون</h1>
   <div class="meta">
     <strong>حوالہ:</strong> <span id="reference"></span><br>
     <strong>مصنف:</strong> <a id="author-link" href="#"></a>
   </div>
   <hr>
+
+  <!-- ✅ Article Content -->
   <div id="content">مواد لوڈ ہو رہا ہے...</div>
 
   <script type="module">
