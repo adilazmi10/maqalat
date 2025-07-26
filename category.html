@@ -55,30 +55,30 @@
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const urlParams = new URLSearchParams(window.location.search);
-    const categoryId = urlParams.get('id');
+    const categoryName = urlParams.get('name');
 
     async function loadCategoryArticles() {
-      if (!categoryId) return;
+      if (!categoryName) return;
 
-      // 1. Get category name from `categories` table
-      const { data: categoryData, error: catErr } = await supabase
+      // Step 1: Get category id from categories table using name
+      const { data: category, error: catErr } = await supabase
         .from('categories')
-        .select('name')
-        .eq('id', categoryId)
+        .select('id, name')
+        .eq('name', categoryName)
         .single();
 
-      if (catErr || !categoryData) {
+      if (catErr || !category) {
         document.getElementById('category-name').textContent = 'زمرہ نہیں ملا';
         return;
       }
 
-      document.getElementById('category-name').textContent = `زمرہ: ${categoryData.name}`;
+      document.getElementById('category-name').textContent = `زمرہ: ${category.name}`;
 
-      // 2. Get articles in this category
+      // Step 2: Get articles in this category
       const { data: articles, error: articleErr } = await supabase
         .from('articles')
         .select('*, authors(name)')
-        .eq('category_id', categoryId)
+        .eq('category_id', category.id)
         .order('id', { ascending: false });
 
       if (articleErr) {
