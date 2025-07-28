@@ -1,5 +1,14 @@
+/* ===== Mehr Nastaliq Font ===== */
+@font-face {
+  font-family: 'Mehr Nastaliq';
+  src: url('fonts/mehr-nastaliq.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ===== Category Navigation ===== */
 .category-nav {
-  direction: rtl; /* aligns from right */
+  direction: rtl;
   margin-top: 10px;
   padding: 0 20px;
 }
@@ -11,7 +20,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  font-family: 'Noto Nastaliq Urdu', serif;
+  font-family: 'Mehr Nastaliq', serif;
   font-size: 18px;
 }
 
@@ -23,4 +32,45 @@
 
 .category-list li a:hover {
   color: #a52a2a;
+}
+
+/* ===== Article & Footnote Styling ===== */
+.article-content {
+  direction: rtl;
+  font-family: 'Mehr Nastaliq', serif;
+  font-size: 18px;
+  line-height: 2;
+  padding: 20px;
+}
+
+.article-content sup {
+  font-size: 14px;
+  line-height: 1;
+  vertical-align: super;
+  font-family: 'Mehr Nastaliq', serif;
+}
+
+.article-content ol {
+  margin-top: 20px;
+  padding-right: 30px;
+  direction: rtl;
+  font-family: 'Mehr Nastaliq', serif;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.article-content ol li {
+  margin-bottom: 10px;
+}
+
+.article-content a[href^="#fn"],
+.article-content a[href^="#fnref"] {
+  text-decoration: none;
+  color: #a52a2a;
+  font-weight: bold;
+}
+
+.article-content a[href^="#fn"]:hover,
+.article-content a[href^="#fnref"]:hover {
+  color: #800000;
 }
