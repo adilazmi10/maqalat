@@ -98,8 +98,19 @@
     <a href="index.html">صفحہ اول</a>
     <a href="category.html?name=مصنفین">مصنفین</a>
     <a href="categories.html">زمرہ جات</a>
-  </nav>
+    <input type="search" id="searchBox" placeholder="تلاش کریں..." style="padding:5px; font-family:'Mehr Nastaliq'; font-size:16px; border-radius:5px; border:1px solid #ccc; direction: rtl;" />
 
+  </nav>
+<script>
+  document.getElementById('searchBox').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      const query = this.value.trim();
+      if (query) {
+        window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+      }
+    }
+  });
+</script>
   <!-- ✅ Article Title and Metadata -->
   <h1 id="title">مضمون</h1>
   <div class="meta">
@@ -116,4 +127,4 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xson
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU
