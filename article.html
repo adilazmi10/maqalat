@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مضمون</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+  
+  <!-- ✅ Font Setup -->
   <style>
     @font-face {
-  font-family: 'Mehr Nastaliq';
-  src: url('fonts/mehr-nastaliq.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
+      font-family: 'Mehr Nastaliq';
+      src: url('fonts/mehr-nastaliq.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
 
-body {
-  font-family: 'Mehr Nastaliq', 'Noto Nastaliq Urdu', serif;
+    body {
+      font-family: 'Mehr Nastaliq', serif;
       background-color: #fdfcf8;
       padding: 20px;
       direction: rtl;
@@ -50,6 +51,38 @@ body {
     .meta {
       margin-top: 10px;
       color: #666;
+      font-size: 16px;
+    }
+
+    /* ✅ Footnote styling */
+    #content sup {
+      font-size: 14px;
+      vertical-align: super;
+      font-family: 'Mehr Nastaliq', serif;
+    }
+
+    #content ol {
+      margin-top: 20px;
+      padding-right: 30px;
+      font-size: 16px;
+      line-height: 1.8;
+      font-family: 'Mehr Nastaliq', serif;
+    }
+
+    #content ol li {
+      margin-bottom: 10px;
+    }
+
+    #content a[href^="#fn"],
+    #content a[href^="#fnref"] {
+      text-decoration: none;
+      color: #a52a2a;
+      font-weight: bold;
+    }
+
+    #content a[href^="#fn"]:hover,
+    #content a[href^="#fnref"]:hover {
+      color: #800000;
     }
   </style>
 </head>
@@ -64,14 +97,15 @@ body {
   <!-- ✅ Article Title and Metadata -->
   <h1 id="title">مضمون</h1>
   <div class="meta">
-    <strong>حوالہ:</strong> <span id="reference"></span><br>
+    <strong>حوالہ:</strong> <span id="reference"></span><br />
     <strong>مصنف:</strong> <a id="author-link" href="#"></a>
   </div>
-  <hr>
+  <hr />
 
-  <!-- ✅ Article Content -->
+  <!-- ✅ Article Content with Footnotes -->
   <div id="content">مواد لوڈ ہو رہا ہے...</div>
 
+  <!-- ✅ Supabase Script -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -87,7 +121,14 @@ body {
 
       const { data: article, error } = await supabase
         .from('articles')
-        .select('id, title, reference, content, author_id, authors(name)')
+        .select(`
+          id,
+          title,
+          reference,
+          content,
+          author_id,
+          authors (id, name)
+        `)
         .eq('id', articleId)
         .single();
 
@@ -101,6 +142,8 @@ body {
       document.getElementById('reference').textContent = article.reference || '';
       document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
       document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
+
+      // ✅ Render footnotes and content as HTML
       document.getElementById('content').innerHTML = article.content || 'کوئی مواد موجود نہیں';
     }
 
