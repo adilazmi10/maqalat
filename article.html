@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مضمون</title>
   
-  <!-- ✅ Font Setup -->
+  <!-- ✅ Font & Style Setup -->
   <style>
     @font-face {
       font-family: 'Mehr Nastaliq';
@@ -67,6 +67,12 @@
       font-size: 16px;
       line-height: 1.8;
       font-family: 'Mehr Nastaliq', serif;
+      list-style: none; /* ✅ removes auto 1., 2., 3. */
+      padding-inline-start: 0;
+    }
+
+    #content ol li::marker {
+      content: none;
     }
 
     #content ol li {
@@ -110,44 +116,4 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const articleId = urlParams.get('id');
-
-    async function loadArticle() {
-      if (!articleId) return;
-
-      const { data: article, error } = await supabase
-        .from('articles')
-        .select(`
-          id,
-          title,
-          reference,
-          content,
-          author_id,
-          authors (id, name)
-        `)
-        .eq('id', articleId)
-        .single();
-
-      if (error || !article) {
-        document.getElementById('content').textContent = 'مضمون نہیں ملا۔';
-        console.error('Error:', error);
-        return;
-      }
-
-      document.getElementById('title').textContent = article.title;
-      document.getElementById('reference').textContent = article.reference || '';
-      document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
-      document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
-
-      // ✅ Render footnotes and content as HTML
-      document.getElementById('content').innerHTML = article.content || 'کوئی مواد موجود نہیں';
-    }
-
-    loadArticle();
-  </script>
-</body>
-</html>
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xson
