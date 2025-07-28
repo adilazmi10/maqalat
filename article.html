@@ -4,127 +4,240 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مضمون</title>
-  
-  <!-- ✅ Font & Style Setup -->
+  <link rel="stylesheet" href="fonts/mehr-nastaliq.woff" />
   <style>
     @font-face {
       font-family: 'Mehr Nastaliq';
       src: url('fonts/mehr-nastaliq.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
     }
 
     body {
+      margin: 0;
+      padding: 0;
       font-family: 'Mehr Nastaliq', serif;
       background-color: #fdfcf8;
-      padding: 20px;
+      color: #222;
       direction: rtl;
+      scroll-behavior: smooth;
     }
 
-    nav.navbar {
+    .navbar {
       background-color: #004d40;
-      padding: 10px;
+      padding: 10px 20px;
       text-align: center;
     }
 
-    nav.navbar a {
+    .navbar a {
       color: white;
       margin: 0 10px;
       text-decoration: none;
       font-size: 18px;
     }
 
-    nav.navbar a:hover {
-      text-decoration: underline;
+    .navbar input[type="search"] {
+      padding: 6px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      direction: rtl;
+      font-family: 'Mehr Nastaliq';
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
     }
 
     h1 {
-      font-size: 30px;
+      font-size: 32px;
       color: #004d40;
-    }
-
-    p {
-      font-size: 16px;
-      line-height: 2;
-    }
-
-    .meta {
-      margin-top: 10px;
-      color: #666;
-      font-size: 16px;
-    }
-
-    /* ✅ Footnote styling */
-    #content sup {
-      font-size: 14px;
-      vertical-align: super;
-      font-family: 'Mehr Nastaliq', serif;
-    }
-
-    #content ol {
-      margin-top: 20px;
-      padding-right: 30px;
-      font-size: 16px;
-      line-height: 1.8;
-      font-family: 'Mehr Nastaliq', serif;
-      list-style: none; /* ✅ removes auto 1., 2., 3. */
-      padding-inline-start: 0;
-    }
-
-    #content ol li::marker {
-      content: none;
-    }
-
-    #content ol li {
       margin-bottom: 10px;
     }
 
-    #content a[href^="#fn"],
-    #content a[href^="#fnref"] {
-      text-decoration: none;
-      color: #a52a2a;
-      font-weight: bold;
+    .meta {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
     }
 
-    #content a[href^="#fn"]:hover,
-    #content a[href^="#fnref"]:hover {
-      color: #800000;
+    .book-pages {
+      display: flex;
+      flex-direction: column;
+      scroll-snap-type: y mandatory;
+      overflow-y: auto;
+      height: 85vh;
+    }
+
+    .page {
+      scroll-snap-align: start;
+      padding: 40px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      line-height: 2;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    .page-number {
+      text-align: center;
+      font-size: 14px;
+      color: #aaa;
+      margin-top: 10px;
+    }
+
+    .nav-footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 18px;
+    }
+
+    .nav-footer a {
+      color: #004d40;
+      text-decoration: underline;
+    }
+
+    /* ✅ Dark Mode */
+    body.dark {
+      background-color: #1a1a1a;
+      color: #ddd;
+    }
+
+    body.dark .navbar {
+      background-color: #222;
+    }
+
+    body.dark .navbar a {
+      color: #ddd;
+    }
+
+    body.dark .page {
+      background: #2a2a2a;
+      color: #eee;
+    }
+
+    .toggle-dark {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .toggle-dark button {
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <!-- ✅ Navigation Bar -->
-  <nav class="navbar">
+  <!-- ✅ Top Nav -->
+  <div class="navbar">
     <a href="index.html">صفحہ اول</a>
     <a href="category.html?name=مصنفین">مصنفین</a>
     <a href="categories.html">زمرہ جات</a>
-    <input type="search" id="searchBox" placeholder="تلاش کریں..." style="padding:5px; font-family:'Mehr Nastaliq'; font-size:16px; border-radius:5px; border:1px solid #ccc; direction: rtl;" />
-
-  </nav>
-<script>
-  document.getElementById('searchBox').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      const query = this.value.trim();
-      if (query) {
-        window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-      }
-    }
-  });
-</script>
-  <!-- ✅ Article Title and Metadata -->
-  <h1 id="title">مضمون</h1>
-  <div class="meta">
-    <strong>حوالہ:</strong> <span id="reference"></span><br />
-    <strong>مصنف:</strong> <a id="author-link" href="#"></a>
+    <input type="search" id="searchBox" placeholder="تلاش کریں..." />
   </div>
-  <hr />
 
-  <!-- ✅ Article Content with Footnotes -->
-  <div id="content">مواد لوڈ ہو رہا ہے...</div>
+  <div class="toggle-dark">
+    <button onclick="document.body.classList.toggle('dark')">🌙 نائٹ موڈ</button>
+  </div>
 
-  <!-- ✅ Supabase Script -->
+  <div class="container">
+    <h1 id="title">مضمون</h1>
+    <div class="meta">
+      <strong>حوالہ:</strong> <span id="reference"></span><br />
+      <strong>مصنف:</strong> <a id="author-link" href="#"></a>
+    </div>
+
+    <!-- ✅ Article Pages -->
+    <div id="bookContainer" class="book-pages"></div>
+
+    <!-- ✅ Suggestions -->
+    <div class="nav-footer" id="relatedArticles"></div>
+  </div>
+
+  <!-- ✅ Supabase Logic -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU
+    const supabase = createClient(
+      'https://npnjpcwqmfwwviqlwrvw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    );
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+
+    async function loadArticle() {
+      const { data: article, error } = await supabase
+        .from('articles')
+        .select(`
+          id, title, reference, content, author_id,
+          authors ( id, name ),
+          created_at
+        `)
+        .eq('id', articleId)
+        .single();
+
+      if (error || !article) {
+        document.getElementById('bookContainer').innerHTML = '<p>مضمون نہیں ملا۔</p>';
+        return;
+      }
+
+      document.getElementById('title').textContent = article.title;
+      document.getElementById('reference').textContent = article.reference || '';
+      document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
+      document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
+
+      // ✅ Paginate content every ~800 characters (roughly a visual page)
+      const content = article.content || '';
+      const chunks = content.match(/(.|[\r\n]){1,800}/g);
+
+      const container = document.getElementById('bookContainer');
+      chunks.forEach((chunk, index) => {
+        const page = document.createElement('div');
+        page.className = 'page';
+        page.innerHTML = chunk + `<div class="page-number">صفحہ ${index + 1}</div>`;
+        container.appendChild(page);
+      });
+
+      loadRelated(article.author_id, article.id);
+    }
+
+    async function loadRelated(authorId, currentId) {
+      const { data, error } = await supabase
+        .from('articles')
+        .select('id, title')
+        .eq('author_id', authorId)
+        .neq('id', currentId)
+        .order('created_at', { ascending: true });
+
+      if (error || !data || data.length === 0) return;
+
+      const index = data.findIndex(a => a.id === currentId);
+      const prev = data[index - 1];
+      const next = data[index + 1];
+
+      const related = document.getElementById('relatedArticles');
+      related.innerHTML = `
+        ${prev ? `<a href="article.html?id=${prev.id}">← پچھلا مضمون</a>` : ''}
+        &nbsp;&nbsp;&nbsp;
+        ${next ? `<a href="article.html?id=${next.id}">اگلا مضمون →</a>` : ''}
+      `;
+    }
+
+    document.getElementById('searchBox').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const query = this.value.trim();
+        if (query) {
+          window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
+
+    loadArticle();
+  </script>
+</body>
+</html>
