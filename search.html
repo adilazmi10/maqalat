@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تلاش کا نتیجہ</title>
+  <style>
+    @font-face {
+      font-family: 'Mehr Nastaliq';
+      src: url('fonts/mehr-nastaliq.woff') format('woff');
+    }
+
+    body {
+      font-family: 'Mehr Nastaliq', serif;
+      background-color: #fdfcf8;
+      padding: 20px;
+    }
+
+    nav.navbar {
+      background-color: #004d40;
+      padding: 10px;
+      text-align: center;
+    }
+
+    nav.navbar a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    input[type="search"] {
+      padding: 5px;
+      font-family: 'Mehr Nastaliq';
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      direction: rtl;
+    }
+
+    .results {
+      margin-top: 30px;
+    }
+
+    .article-card {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+
+    .article-card h3 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .article-card p {
+      font-size: 16px;
+      margin: 4px 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Navigation Bar with Search -->
+  <nav class="navbar">
+    <a href="index.html">صفحہ اول</a>
+    <a href="category.html?name=مصنفین">مصنفین</a>
+    <a href="categories.html">زمرہ جات</a>
+    <input type="search" id="searchBox" placeholder="تلاش کریں..." />
+  </nav>
+
+  <div class="results" id="results">نتائج لوڈ ہو رہے ہیں...</div>
+
+  <!-- ✅ Supabase + Search Logic -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabase = createClient(
+      'https://npnjpcwqmfwwviqlwrvw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'
+    );
+
+    const query = new URLSearchParams(window.location.search).get('q')?.trim() || '';
+
+    document.getElementById('searchBox').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const q = this.value.trim();
+        if (q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+      }
+    });
+
+    async function searchArticles() {
+      if (!query) {
+        document.getElementById('results').textContent = 'کوئی تلاش کی عبارت فراہم نہیں کی گئی۔';
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('articles')
+        .select(`
+          id,
+          title,
+          reference,
+          content,
+          authors ( id, name )
+        `)
+        .ilike('title', `%${query}%`)
+        .or(`
+          reference.ilike.%${query}%,
+          content.ilike.%${query}%,
+          authors.name.ilike.%${query}%
+        `);
+
+      if (error) {
+        document.getElementById('results').textContent = 'تلاش میں خرابی پیش آئی۔';
+        console.error(error);
+        return;
+      }
+
+      const container = document.getElementById('results');
+      container.innerHTML = `<h2>تلاش: ${query}</h2>`;
+
+      if (data.length === 0) {
+        container.innerHTML += '<p>کوئی نتیجہ نہیں ملا۔</p>';
+        return;
+      }
+
+      data.forEach(article => {
+        const card = document.createElement('div');
+        card.className = 'article-card';
+        card.innerHTML = `
+          <h3><a href="article.html?id=${article.id}">${article.title}</a></h3>
+          <p><strong>حوالہ:</strong> ${article.reference || ''}</p>
+          <p><strong>مصنف:</strong> <a href="author.html?id=${article.authors?.id}">${article.authors?.name || 'نامعلوم'}</a></p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    searchArticles();
+  </script>
+</body>
+</html>
