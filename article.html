@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مضمون</title>
-  <link rel="stylesheet" href="fonts/mehr-nastaliq.woff" />
   <style>
     @font-face {
       font-family: 'Mehr Nastaliq';
@@ -99,7 +98,18 @@
       text-decoration: underline;
     }
 
-    /* ✅ Dark Mode */
+    .toggle-dark {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .toggle-dark button {
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
     body.dark {
       background-color: #1a1a1a;
       color: #ddd;
@@ -116,18 +126,6 @@
     body.dark .page {
       background: #2a2a2a;
       color: #eee;
-    }
-
-    .toggle-dark {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .toggle-dark button {
-      padding: 6px 12px;
-      font-family: inherit;
-      font-size: 14px;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -151,10 +149,8 @@
       <strong>مصنف:</strong> <a id="author-link" href="#"></a>
     </div>
 
-    <!-- ✅ Article Pages -->
     <div id="bookContainer" class="book-pages"></div>
 
-    <!-- ✅ Suggestions -->
     <div class="nav-footer" id="relatedArticles"></div>
   </div>
 
@@ -191,7 +187,7 @@
       document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
       document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
 
-      // ✅ Paginate content every ~800 characters (roughly a visual page)
+      // ✅ Paginate every ~800 chars (1 visual page)
       const content = article.content || '';
       const chunks = content.match(/(.|[\r\n]){1,800}/g);
 
@@ -228,6 +224,7 @@
       `;
     }
 
+    // ✅ Search bar
     document.getElementById('searchBox').addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
         const query = this.value.trim();
