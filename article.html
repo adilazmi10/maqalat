@@ -78,7 +78,6 @@
       line-height: 2;
       font-size: 18px;
       text-align: justify;
-      position: relative;
     }
 
     .page-number {
@@ -135,7 +134,6 @@
   </style>
 </head>
 <body>
-  <!-- ✅ Top Navigation -->
   <div class="navbar">
     <a href="index.html">صفحہ اول</a>
     <a href="category.html?name=مصنفین">مصنفین</a>
@@ -154,23 +152,20 @@
       <strong>مصنف:</strong> <a id="author-link" href="#"></a>
     </div>
 
-    <!-- ✅ Article Pages -->
     <div id="bookContainer" class="book-pages"></div>
-
-    <!-- ✅ Suggestions -->
     <div class="nav-footer" id="relatedArticles"></div>
   </div>
 
-  <!-- ✅ Supabase Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
+  <!-- ✅ Supabase v2 client via CDN -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = createClient(
+      'https://npnjpcwqmfwwviqlwrvw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'
+    );
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const articleId = urlParams.get('id');
+    const articleId = new URLSearchParams(window.location.search).get('id');
 
     async function loadArticle() {
       const { data: article, error } = await supabase
