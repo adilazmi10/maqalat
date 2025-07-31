@@ -111,7 +111,6 @@
       cursor: pointer;
     }
 
-    /* ✅ Dark Mode */
     body.dark {
       background-color: #1a1a1a;
       color: #ddd;
@@ -136,8 +135,6 @@
   </style>
 </head>
 <body>
-
-  <!-- ✅ Top Navigation -->
   <div class="navbar">
     <a href="index.html">صفحہ اول</a>
     <a href="category.html?name=مصنفین">مصنفین</a>
@@ -145,12 +142,10 @@
     <input type="search" id="searchBox" placeholder="تلاش کریں..." />
   </div>
 
-  <!-- ✅ Dark Mode Toggle -->
   <div class="toggle-dark">
     <button onclick="document.body.classList.toggle('dark')">🌙 نائٹ موڈ</button>
   </div>
 
-  <!-- ✅ Article Container -->
   <div class="container">
     <h1 id="title">مضمون</h1>
     <div class="meta">
@@ -159,18 +154,14 @@
     </div>
 
     <div id="bookContainer" class="book-pages"></div>
-
-    <!-- ✅ Next / Previous Article -->
     <div class="nav-footer" id="relatedArticles"></div>
   </div>
 
-  <!-- ✅ Supabase & Search Script -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabase = Supabase.createClient(
-      'https://npnjpcwqmfwwviqlwrvw.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'
-    );
+    const SUPABASE_URL = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'; 
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const urlParams = new URLSearchParams(window.location.search);
     const articleId = urlParams.get('id');
@@ -192,10 +183,9 @@
       document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
       document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
 
-      // ✅ Split content into ~800-char pages
       const chunks = (article.content || '').match(/(.|[\r\n]){1,800}/g) || [];
       const container = document.getElementById('bookContainer');
-      container.innerHTML = ''; // Clear previous
+      container.innerHTML = '';
 
       chunks.forEach((chunk, index) => {
         const page = document.createElement('div');
@@ -214,7 +204,7 @@
         .eq('author_id', authorId)
         .order('created_at', { ascending: true });
 
-      if (error || !data || data.length === 0) return;
+      if (error || !data) return;
 
       const index = data.findIndex(a => a.id == currentId);
       const prev = data[index - 1];
