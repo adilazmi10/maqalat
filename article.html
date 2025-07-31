@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مضمون</title>
-  <link rel="stylesheet" href="fonts/mehr-nastaliq.woff" />
   <style>
     @font-face {
       font-family: 'Mehr Nastaliq';
@@ -12,7 +11,120 @@
     }
 
     body {
+      font-family: 'Mehr Nastaliq', serif;
+      background-color: #fdfcf8;
+      color: #222;
+      direction: rtl;
       margin: 0;
       padding: 0;
-      font-family: 'Mehr Nastaliq', serif;
-      background-col
+    }
+
+    .navbar {
+      background: #004d40;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .navbar a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #004d40;
+    }
+
+    .meta {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .page {
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      line-height: 2;
+    }
+
+    .page-number {
+      text-align: center;
+      color: #aaa;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="index.html">صفحہ اول</a>
+    <a href="categories.html">زمرہ جات</a>
+  </div>
+
+  <div class="container">
+    <h1 id="title">مضمون لوڈ ہو رہا ہے...</h1>
+    <div class="meta">
+      <strong>حوالہ:</strong> <span id="reference"></span><br>
+      <strong>مصنف:</strong> <a id="author-link" href="#"></a>
+    </div>
+    <div id="bookContainer"></div>
+  </div>
+
+  <!-- ✅ Supabase Client (non-module) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = supabase.createClient(
+      'https://npnjpcwqmfwwviqlwrvw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'
+    );
+
+    async function loadArticle() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const articleId = urlParams.get('id');
+      if (!articleId) {
+        document.getElementById('title').textContent = 'مضمون کی شناخت نہیں ملی';
+        return;
+      }
+
+      const { data: article, error } = await supabase
+        .from('articles')
+        .select(`id, title, reference, content, author_id, authors(id, name)`)
+        .eq('id', articleId)
+        .single();
+
+      if (error || !article) {
+        document.getElementById('title').textContent = 'مضمون نہیں ملا';
+        console.error(error);
+        return;
+      }
+
+      document.getElementById('title').textContent = article.title;
+      document.getElementById('reference').textContent = article.reference || '';
+      document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
+      document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
+
+      const container = document.getElementById('bookContainer');
+      const chunks = (article.content || '').match(/(.|[\r\n]){1,800}/g) || [];
+      chunks.forEach((chunk, index) => {
+        const page = document.createElement('div');
+        page.className = 'page';
+        page.innerHTML = chunk + `<div class="page-number">صفحہ ${index + 1}</div>`;
+        container.appendChild(page);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadArticle);
+  </script>
+</body>
+</html>
