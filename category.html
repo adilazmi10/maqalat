@@ -1,35 +1,80 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Debug Article</title></head>
-<body style="font-family: 'Mehr Nastaliq', serif; direction:rtl; padding:20px;">
-  <h1 id="title">Loading…</h1>
-  <p id="content">Fetching article content…</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مضمون</title>
+  <style>
+    @font-face {
+      font-family: 'Mehr Nastaliq';
+      src: url('fonts/mehr-nastaliq.woff') format('woff');
+    }
+    body {
+      font-family: 'Mehr Nastaliq', serif;
+      background-color: #fdfcf8;
+      direction: rtl;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 { font-size: 28px; color: #004d40; }
+    .meta { font-size: 16px; color: #555; margin-bottom: 20px; }
+    .page { margin-bottom: 40px; font-size: 18px; line-height: 2; }
+  </style>
+</head>
+<body>
+  <h1 id="title">عنوان لوڈ ہو رہا ہے…</h1>
+  <div class="meta">
+    <strong>حوالہ:</strong> <span id="reference"></span><br />
+    <strong>مصنف:</strong> <a id="author-link" href="#"></a>
+  </div>
+  <div id="content"></div>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
     const supabase = createClient(
       'https://npnjpcwqmfwwviqlwrvw.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'
     );
-    const articleId = new URLSearchParams(window.location.search).get('id');
-    if (!articleId) {
-      document.getElementById('title').textContent = 'No article ID provided';
-    } else {
-      supabase
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+
+    async function loadArticle() {
+      if (!articleId) {
+        document.getElementById('content').textContent = 'آرٹیکل ID موجود نہیں۔';
+        return;
+      }
+
+      const { data: article, error } = await supabase
         .from('articles')
-        .select('id,title,content')
+        .select(`id, title, reference, content, author_id, authors ( name )`)
         .eq('id', articleId)
-        .single()
-        .then(({ data, error }) => {
-          if (error || !data) {
-            document.getElementById('title').textContent = 'Article not found';
-            console.error(error);
-          } else {
-            document.getElementById('title').textContent = data.title;
-            document.getElementById('content').textContent = data.content.slice(0,200)+'…';
-          }
-        });
+        .single();
+
+      if (error || !article) {
+        console.error(error);
+        document.getElementById('content').textContent = 'مضمون لوڈ کرنے میں خرابی۔';
+        return;
+      }
+
+      document.getElementById('title').textContent = article.title;
+      document.getElementById('reference').textContent = article.reference || '';
+      document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
+      document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
+
+      const contentDiv = document.getElementById('content');
+      const pages = article.content.match(/(.|[\r\n]){1,800}/g) || [];
+
+      pages.forEach((chunk, i) => {
+        const div = document.createElement('div');
+        div.className = 'page';
+        div.innerHTML = chunk + `<div style="text-align:center; font-size:14px; color:#888;">صفحہ ${i + 1}</div>`;
+        contentDiv.appendChild(div);
+      });
     }
+
+    loadArticle();
   </script>
 </body>
 </html>
