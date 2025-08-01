@@ -156,7 +156,7 @@
     <div class="nav-footer" id="relatedArticles"></div>
   </div>
 
-  <!-- ✅ Supabase v2 client via CDN -->
+  <!-- ✅ Correct Supabase Module Script -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -167,10 +167,22 @@
 
     const articleId = new URLSearchParams(window.location.search).get('id');
 
+    document.getElementById('searchBox').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const query = this.value.trim();
+        if (query) {
+          window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
+
     async function loadArticle() {
       const { data: article, error } = await supabase
         .from('articles')
-        .select(`id, title, reference, content, author_id, authors(id, name), created_at`)
+        .select(`
+          id, title, reference, content, author_id,
+          authors(id, name), created_at
+        `)
         .eq('id', articleId)
         .single();
 
@@ -184,9 +196,9 @@
       document.getElementById('author-link').textContent = article.authors?.name || 'نامعلوم';
       document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
 
-      const chunks = (article.content || '').match(/(.|[\r\n]){1,800}/g) || [];
       const container = document.getElementById('bookContainer');
       container.innerHTML = '';
+      const chunks = (article.content || '').match(/(.|[\r\n]){1,800}/g) || [];
 
       chunks.forEach((chunk, index) => {
         const page = document.createElement('div');
@@ -219,15 +231,7 @@
       `;
     }
 
-    document.getElementById('searchBox').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        const query = this.value.trim();
-        if (query) {
-          window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-        }
-      }
-    });
-
     loadArticle();
   </script>
 </body>
+</html>
