@@ -156,32 +156,23 @@
     <div class="nav-footer" id="relatedArticles"></div>
   </div>
 
-  <!-- ✅ Correct Supabase Module Script -->
+  <!-- ✅ Supabase v2 ESM Script -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabase = createClient(
-      'https://npnjpcwqmfwwviqlwrvw.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'
-    );
+    const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     const articleId = new URLSearchParams(window.location.search).get('id');
-
-    document.getElementById('searchBox').addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') {
-        const query = this.value.trim();
-        if (query) {
-          window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-        }
-      }
-    });
 
     async function loadArticle() {
       const { data: article, error } = await supabase
         .from('articles')
         .select(`
-          id, title, reference, content, author_id,
-          authors(id, name), created_at
+          id, title, reference, content, author_id, created_at,
+          authors ( id, name )
         `)
         .eq('id', articleId)
         .single();
@@ -197,8 +188,8 @@
       document.getElementById('author-link').href = `author.html?id=${article.author_id}`;
 
       const container = document.getElementById('bookContainer');
-      container.innerHTML = '';
       const chunks = (article.content || '').match(/(.|[\r\n]){1,800}/g) || [];
+      container.innerHTML = '';
 
       chunks.forEach((chunk, index) => {
         const page = document.createElement('div');
@@ -230,6 +221,15 @@
         ${next ? `<a href="article.html?id=${next.id}">اگلا مضمون →</a>` : ''}
       `;
     }
+
+    document.getElementById('searchBox').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const query = this.value.trim();
+        if (query) {
+          window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+        }
+      }
+    });
 
     loadArticle();
   </script>
