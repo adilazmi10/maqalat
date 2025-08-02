@@ -4,132 +4,75 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>مضمون</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
   <style>
-    @font-face {
-      font-family: 'Mehr Nastaliq';
-      src: url('fonts/mehr-nastaliq.woff') format('woff');
-    }
-
     body {
       margin: 0;
-      padding: 0;
-      font-family: 'Mehr Nastaliq', serif;
+      font-family: 'Noto Nastaliq Urdu', serif;
       background-color: #fdfcf8;
       color: #222;
       direction: rtl;
-      scroll-behavior: smooth;
     }
-
     .navbar {
       background-color: #004d40;
       padding: 10px 20px;
       text-align: center;
     }
-
     .navbar a {
       color: white;
       margin: 0 10px;
       text-decoration: none;
       font-size: 18px;
     }
-
     .navbar input[type="search"] {
       padding: 6px;
       font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
       direction: rtl;
-      font-family: 'Mehr Nastaliq';
     }
-
     .container {
       max-width: 700px;
       margin: 40px auto;
       padding: 0 20px;
     }
-
     h1 {
       font-size: 32px;
       color: #004d40;
-      margin-bottom: 10px;
     }
-
     .meta {
       font-size: 16px;
       color: #666;
       margin-bottom: 20px;
     }
-
     .book-pages {
       display: flex;
       flex-direction: column;
-      scroll-snap-type: y mandatory;
-      overflow-y: auto;
-      height: 85vh;
+      gap: 20px;
     }
-
     .page {
-      scroll-snap-align: start;
-      padding: 40px;
       background: #fff;
+      padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      line-height: 2;
-      font-size: 18px;
+      font-size: 20px;
+      line-height: 2.2;
       text-align: justify;
     }
-
     .page-number {
       text-align: center;
       font-size: 14px;
-      color: #aaa;
+      color: #999;
       margin-top: 10px;
     }
-
     .nav-footer {
       text-align: center;
-      margin-top: 40px;
+      margin-top: 30px;
       font-size: 18px;
     }
-
     .nav-footer a {
       color: #004d40;
       text-decoration: underline;
-    }
-
-    .toggle-dark {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .toggle-dark button {
-      padding: 6px 12px;
-      font-family: inherit;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    body.dark {
-      background-color: #1a1a1a;
-      color: #ddd;
-    }
-
-    body.dark .navbar {
-      background-color: #222;
-    }
-
-    body.dark .navbar a {
-      color: #ddd;
-    }
-
-    body.dark .page {
-      background: #2a2a2a;
-      color: #eee;
-    }
-
-    body.dark .nav-footer a {
-      color: #80cbc4;
     }
   </style>
 </head>
@@ -138,42 +81,33 @@
     <a href="index.html">صفحہ اول</a>
     <a href="category.html?name=مصنفین">مصنفین</a>
     <a href="categories.html">زمرہ جات</a>
-    <input type="search" id="searchBox" placeholder="تلاش کریں..." />
-  </div>
-
-  <div class="toggle-dark">
-    <button onclick="document.body.classList.toggle('dark')">🌙 نائٹ موڈ</button>
+    <input type="search" id="searchBox" placeholder="تلاش کریں...">
   </div>
 
   <div class="container">
     <h1 id="title">مضمون</h1>
     <div class="meta">
-      <strong>حوالہ:</strong> <span id="reference"></span><br />
-      <strong>مصنف:</strong> <a id="author-link" href="#"></a>
+      <strong>حوالہ:</strong> <span id="reference"></span><br>
+      <strong>مصنف:</strong> <a id="author-link" href="#">نامعلوم</a>
     </div>
-
     <div id="bookContainer" class="book-pages"></div>
     <div class="nav-footer" id="relatedArticles"></div>
   </div>
 
-  <!-- ✅ Supabase v2 ESM Script -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabaseUrl = 'https://npnjpcwqmfwwviqlwrvw.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU';
-
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(
+      'https://npnjpcwqmfwwviqlwrvw.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wbmpwY3dxbWZ3d3ZpcWx3cnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTMyMzMsImV4cCI6MjA2ODY4OTIzM30.EEbXf-xsonUjvE0DZBOGcG9EU97aGNSUc6MRTEE40pU'
+    );
 
     const articleId = new URLSearchParams(window.location.search).get('id');
 
     async function loadArticle() {
       const { data: article, error } = await supabase
         .from('articles')
-        .select(`
-          id, title, reference, content, author_id, created_at,
-          authors ( id, name )
-        `)
+        .select('id, title, reference, content, author_id, authors(name), created_at')
         .eq('id', articleId)
         .single();
 
@@ -231,7 +165,7 @@
       }
     });
 
-    loadArticle();
+    document.addEventListener('DOMContentLoaded', loadArticle);
   </script>
 </body>
 </html>
